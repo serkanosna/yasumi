@@ -18,10 +18,17 @@ declare(strict_types = 1);
 namespace Yasumi\tests\Turkey;
 
 use Yasumi\Holiday;
+use Yasumi\Provider\Turkey;
 use Yasumi\tests\ProviderTestCase;
 
 class TurkeyTest extends TurkeyBaseTestCase implements ProviderTestCase
 {
+    /**
+     * Years in which one of the Islamic feasts falls twice, or runs across the turn of the year. The holiday keys
+     * differ in those years, which is covered by the test cases of the feasts themselves.
+     */
+    private const IRREGULAR_YEARS = [1974, 2000, 2006, 2007, 2033];
+
     /**
      * @var int year random year number used for all tests in this Test Case
      */
@@ -32,7 +39,9 @@ class TurkeyTest extends TurkeyBaseTestCase implements ProviderTestCase
      */
     protected function setUp(): void
     {
-        $this->year = static::generateRandomYear();
+        do {
+            $this->year = static::generateRandomYear();
+        } while (\in_array($this->year, self::IRREGULAR_YEARS, true));
     }
 
     public function testOfficialHolidays(): void
@@ -65,6 +74,18 @@ class TurkeyTest extends TurkeyBaseTestCase implements ProviderTestCase
 
         if (1923 < $this->year) {
             $holidays[] = 'republicDay';
+        }
+
+        // The Islamic feasts are only defined for the years listed in the provider.
+        if (isset(Turkey::ISLAMIC_HOLIDAY['ramadanFeast'][$this->year])) {
+            $holidays = array_merge($holidays, ['ramadanFeast1', 'ramadanFeast2', 'ramadanFeast3']);
+        }
+
+        if (isset(Turkey::ISLAMIC_HOLIDAY['sacrificeFeast'][$this->year])) {
+            $holidays = array_merge(
+                $holidays,
+                ['sacrificeFeast1', 'sacrificeFeast2', 'sacrificeFeast3', 'sacrificeFeast4']
+            );
         }
 
         $this->assertDefinedHolidays($holidays, self::REGION, $this->year, Holiday::TYPE_OFFICIAL);
@@ -102,6 +123,6 @@ class TurkeyTest extends TurkeyBaseTestCase implements ProviderTestCase
      */
     public function testSources(): void
     {
-        $this->assertSources(self::REGION, 2);
+        $this->assertSources(self::REGION, 3);
     }
 }

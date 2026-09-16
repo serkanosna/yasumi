@@ -12,6 +12,7 @@ followed by any architectural or technical changes.
 
 ### Features
 
+- _(Turkey)_ Add Ramadan Feast and Sacrifice Feast ([#426](https://github.com/azuyalabs/yasumi/issues/426))
 - Add Kenya holiday provider ([#418](https://github.com/azuyalabs/yasumi/issues/418))
 - _(Colombia)_ Add Day of Our Lady of the Rosary of Chiquinquirá holiday
 - Add Colombia holiday provider ([#403](https://github.com/azuyalabs/yasumi/issues/403))
